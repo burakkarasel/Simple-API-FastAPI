@@ -60,6 +60,8 @@ async def update_movie(movie: Movie):
         movies[i].rate = movie.rate
         return movie """
 
+# patch handler lets us to update the rate of a movie for given id
+
 
 @app.patch("/movies/{id}")
 async def update_movie(id: int = Path(None, description="id of the movie you want to update", gt=0), rate: float = Query(None, description="updated rate of the movie", gt=0, le=10)):
