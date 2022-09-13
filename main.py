@@ -61,7 +61,7 @@ async def update_movie(movie: Movie):
         return movie """
 
 
-@app.put("/movies/{id}")
+@app.patch("/movies/{id}")
 async def update_movie(id: int = Path(None, description="id of the movie you want to update", gt=0), rate: float = Query(None, description="updated rate of the movie", gt=0, le=10)):
     try:
         movies[id - 1].rate = rate
