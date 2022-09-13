@@ -33,6 +33,8 @@ async def list_movies(limit: int = Query(None, description="limit of movies you 
     except:
         raise HTTPException(status_code=400, detail="invalid params")
 
+# post request lets us to create a new movie and add it to the list
+
 
 @app.post("/movies")
 async def create_movie(movie: Movie):
@@ -41,3 +43,30 @@ async def create_movie(movie: Movie):
 
     movies.append(movie)
     return movie
+
+# put request lets us to update the rate of a movie given
+
+
+@app.put("/movies")
+async def update_movie(movie: Movie):
+    i = -1
+    for idx, m in enumerate(movies):
+        if m.title == movie.title:
+            i = idx
+            break
+    else:
+        return HTTPException(status_code=404, detail="movie not found")
+    if movie.title and movie.director and movie.rate:
+        movies[i].rate = movie.rate
+        return movie
+
+# delete lets us to remove a specific movie by it's id
+
+
+@app.delete("/movies/{id}")
+async def delete_movie(id: int = Path(None, description="The ID of the movie you want to delete", gt=0)):
+    try:
+        del movies[id - 1]
+        return {"success": "movie is successfully deleted"}
+    except Exception:
+        raise HTTPException(status_code=404, detail="movie not found")
