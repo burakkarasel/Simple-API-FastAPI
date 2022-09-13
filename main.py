@@ -22,7 +22,7 @@ async def get_movie(id: int = Path(None, description="The ID of the movie you wa
     try:
         return movies[id - 1]
     except Exception:
-        raise HTTPException(status_code=404, detail="Not Found")
+        raise HTTPException(status_code=404, detail="movie not found")
 
 
 @app.get("/movies")
@@ -47,7 +47,7 @@ async def create_movie(movie: Movie):
 # put request lets us to update the rate of a movie given
 
 
-@app.put("/movies")
+""" @app.put("/movies")
 async def update_movie(movie: Movie):
     i = -1
     for idx, m in enumerate(movies):
@@ -58,7 +58,16 @@ async def update_movie(movie: Movie):
         return HTTPException(status_code=404, detail="movie not found")
     if movie.title and movie.director and movie.rate:
         movies[i].rate = movie.rate
-        return movie
+        return movie """
+
+
+@app.put("/movies/{id}")
+async def update_movie(id: int = Path(None, description="id of the movie you want to update", gt=0), rate: float = Query(None, description="updated rate of the movie", gt=0, le=10)):
+    try:
+        movies[id - 1].rate = rate
+        return movies[id - 1]
+    except Exception:
+        raise HTTPException(status_code=404, detail="movie not found")
 
 # delete lets us to remove a specific movie by it's id
 
